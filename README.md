@@ -1,36 +1,67 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🚀 QuickCert
 
-## Getting Started
+**QuickCert** is a modern, multi-tenant Business Document Generation and Verification Platform. It empowers organizations to dynamically generate, issue, and cryptographically verify official documents (such as certificates, inspection records, and employee letters) in bulk.
 
-First, run the development server:
+![QuickCert Dashboard](https://img.shields.io/badge/Status-Active_Development-success)
+![Next.js](https://img.shields.io/badge/Next.js-14-black)
+![Prisma](https://img.shields.io/badge/Prisma-ORM-blue)
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## ✨ Key Features
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- 🏢 **Multi-Tenant Architecture:** Support for multiple organizations (schools, businesses, hospitals) with role-based access control.
+- 📄 **Dynamic Data Schemas:** Create custom data models for your specific needs (e.g., "Student", "Employee", "Quality Record").
+- 🎨 **Custom Document Templates:** Upload background images and precisely map data fields directly onto your documents.
+- ⚡ **Bulk Import & Generation:** Import hundreds of records via Excel/CSV and generate pixel-perfect PDFs in seconds.
+- 🔒 **Instant QR Verification:** Every document gets a unique QR code linking to a secure public verification page to instantly prove authenticity and prevent forgery.
+- 📜 **Full Lifecycle Management:** Issue, revoke, and track version histories with an immutable audit log.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 🛠️ Tech Stack
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- **Frontend / Framework:** [Next.js](https://nextjs.org/) (React)
+- **Styling:** Tailwind CSS
+- **Database:** Prisma ORM 
+- **PDF Engine:** `pdf-lib` for dynamic client/server-side PDF manipulation
+- **Authentication:** Custom Role-Based Access Control (RBAC)
 
-## Learn More
+## 🚀 Getting Started
 
-To learn more about Next.js, take a look at the following resources:
+### Prerequisites
+Make sure you have Node.js (v18+) and npm installed on your machine.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Installation
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/rakesh-itnal/QuickCert_Project.git
+   cd QuickCert_Project
+   ```
 
-## Deploy on Vercel
+2. **Install dependencies:**
+   ```bash
+   npm install
+   ```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+3. **Set up the database:**
+   Ensure your `.env` file is configured properly, then run:
+   ```bash
+   npx prisma generate
+   npx prisma db push
+   ```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+4. **Run the development server:**
+   ```bash
+   npm run dev
+   ```
+
+5. **Open the app:**
+   Navigate to [http://localhost:3000](http://localhost:3000) in your browser.
+
+## 📖 Quick Workflow Guide
+1. **Create an Organization:** Set up your tenant workspace and business profile.
+2. **Define a Schema:** Tell the system what data you want to collect (e.g. Name, Grade, Date).
+3. **Upload a Template:** Add a blank certificate background and map your schema fields to X/Y coordinates.
+4. **Import Data:** Upload a CSV/Excel file containing your raw records.
+5. **Generate:** Hit generate to create verifiable PDF documents for every row of data instantly!
+
+---
+*Built with ❤️ to solve modern document management.*
