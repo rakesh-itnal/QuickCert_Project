@@ -1,0 +1,35 @@
+# QuickCert Implementation Tasks
+
+- [x] Phase 1: Foundation
+  - [x] Initialize Next.js 14 project with TypeScript & Tailwind CSS
+  - [x] Setup Shadcn UI and premium color palette (Trust Blue/Slate)
+  - [x] Setup Database (Prisma ORM) and schema based on 26 English/Kannada fields
+- [x] Phase 2: Core Dashboard & Database
+  - [x] Create Premium Authentication Interface (/login)
+  - [x] Build Core Dashboard Sidebar & Overview Interface (/dashboard)
+  - [x] Connect Database to NextAuth/Session logic
+  - [x] Build Institute Settings Profile (Logo, Principal Signature, UDISE)
+- [x] Phase 3: Data Ingestion
+  - [x] Excel & CSV Drag-and-Drop parser
+  - [x] Build Student Data Management view (/dashboard/students)
+  - [x] Class/Section tagging for student batches
+- [x] Phase 4: Certificate Generation Engine
+  - [x] Install pdf-lib, qrcode, jszip, @pdf-lib/fontkit dependencies
+  - [x] Build PDF generator utility (src/lib/pdf-generator.ts) — 4 templates
+  - [x] Embed Noto Sans Kannada TTF for real ಕನ್ನಡ Unicode rendering
+  - [x] Build certificate generation server actions (single + bulk)
+  - [x] Build Certificate Vault dashboard (/dashboard/certificates)
+  - [x] Build single certificate generation form (/dashboard/certificates/generate)
+  - [x] Build bulk certificate generation page (/dashboard/certificates/bulk)
+  - [x] Build public QR verification page (/verify/[key])
+  - [x] Build students API route (/api/students)
+  - [x] Build Custom Templates page (/dashboard/templates) with upload & type labeling
+  - [x] Active sidebar highlighting + Mobile hamburger menu
+  - [x] Dashboard real-data stats (students, certificates, class distribution)
+- [/] Phase 5: Business Logic & Admin
+  - [/] Build Super Admin panel (/admin) — institute management, data integrity
+  - [ ] Build Stripe Subscription Billing (requires API keys from user)
+- [/] Phase 6: Final Polish & Deployment
+  - [/] Rebuild landing page with professional design
+  - [ ] Production build optimization
+  - [ ] Prepare for Vercel/Render deployment

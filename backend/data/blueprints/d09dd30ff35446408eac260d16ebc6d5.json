@@ -1,0 +1,385 @@
+{
+  "template_id": "d09dd30ff35446408eac260d16ebc6d5",
+  "source_image_url": "/assets/uploads/d09dd30ff35446408eac260d16ebc6d5.png",
+  "image_width": 1024,
+  "image_height": 1536,
+  "fields": [
+    {
+      "id": "field_01",
+      "label": "Admission No.",
+      "type": "line",
+      "bbox": [
+        186,
+        165,
+        202,
+        381
+      ],
+      "mapping_column": null,
+      "manual_text": ""
+    },
+    {
+      "id": "field_02",
+      "label": "S.T.S. No.",
+      "type": "line",
+      "bbox": [
+        178,
+        513,
+        201,
+        703
+      ],
+      "mapping_column": null,
+      "manual_text": ""
+    },
+    {
+      "id": "field_03",
+      "label": "T.C. No.",
+      "type": "line",
+      "bbox": [
+        179,
+        796,
+        200,
+        969
+      ],
+      "mapping_column": null,
+      "manual_text": ""
+    },
+    {
+      "id": "field_04",
+      "label": "Name of the Pupil",
+      "type": "box",
+      "bbox": [
+        210,
+        421,
+        231,
+        973
+      ],
+      "mapping_column": null,
+      "manual_text": ""
+    },
+    {
+      "id": "field_05",
+      "label": "Name of the Father",
+      "type": "box",
+      "bbox": [
+        235,
+        421,
+        256,
+        973
+      ],
+      "mapping_column": null,
+      "manual_text": ""
+    },
+    {
+      "id": "field_06",
+      "label": "Name of the Mother",
+      "type": "box",
+      "bbox": [
+        262,
+        422,
+        283,
+        974
+      ],
+      "mapping_column": null,
+      "manual_text": ""
+    },
+    {
+      "id": "field_07",
+      "label": "Nationality",
+      "type": "box",
+      "bbox": [
+        288,
+        177,
+        309,
+        606
+      ],
+      "mapping_column": null,
+      "manual_text": ""
+    },
+    {
+      "id": "field_08",
+      "label": "Gender",
+      "type": "box",
+      "bbox": [
+        287,
+        712,
+        308,
+        956
+      ],
+      "mapping_column": null,
+      "manual_text": ""
+    },
+    {
+      "id": "field_09",
+      "label": "Religion and Caste",
+      "type": "box",
+      "bbox": [
+        312,
+        421,
+        333,
+        973
+      ],
+      "mapping_column": null,
+      "manual_text": ""
+    },
+    {
+      "id": "field_10",
+      "label": "Place of Birth",
+      "type": "box",
+      "bbox": [
+        338,
+        421,
+        359,
+        973
+      ],
+      "mapping_column": null,
+      "manual_text": ""
+    },
+    {
+      "id": "field_11",
+      "label": "Date of Birth",
+      "type": "box",
+      "bbox": [
+        363,
+        420,
+        384,
+        972
+      ],
+      "mapping_column": null,
+      "manual_text": ""
+    },
+    {
+      "id": "field_12",
+      "label": "According to Christian Era in",
+      "type": "box",
+      "bbox": [
+        390,
+        420,
+        411,
+        972
+      ],
+      "mapping_column": null,
+      "manual_text": ""
+    },
+    {
+      "id": "field_13",
+      "label": "Class Admitted",
+      "type": "box",
+      "bbox": [
+        415,
+        421,
+        436,
+        973
+      ],
+      "mapping_column": null,
+      "manual_text": ""
+    },
+    {
+      "id": "field_14",
+      "label": "Last School Attended",
+      "type": "box",
+      "bbox": [
+        440,
+        421,
+        461,
+        973
+      ],
+      "mapping_column": null,
+      "manual_text": ""
+    },
+    {
+      "id": "field_15",
+      "label": "Date of Admission",
+      "type": "box",
+      "bbox": [
+        466,
+        421,
+        487,
+        973
+      ],
+      "mapping_column": null,
+      "manual_text": ""
+    },
+    {
+      "id": "field_16",
+      "label": "Belongs to SC/ST",
+      "type": "box",
+      "bbox": [
+        491,
+        420,
+        512,
+        972
+      ],
+      "mapping_column": null,
+      "manual_text": ""
+    },
+    {
+      "id": "field_17",
+      "label": "Standard at Leaving",
+      "type": "box",
+      "bbox": [
+        518,
+        419,
+        570,
+        969
+      ],
+      "mapping_column": null,
+      "manual_text": ""
+    },
+    {
+      "id": "field_18",
+      "label": "Qualified for Promotion",
+      "type": "box",
+      "bbox": [
+        573,
+        421,
+        594,
+        973
+      ],
+      "mapping_column": null,
+      "manual_text": ""
+    },
+    {
+      "id": "field_19",
+      "label": "School Days to Leaving Date",
+      "type": "box",
+      "bbox": [
+        597,
+        421,
+        618,
+        973
+      ],
+      "mapping_column": null,
+      "manual_text": ""
+    },
+    {
+      "id": "field_20",
+      "label": "School Days Attended",
+      "type": "box",
+      "bbox": [
+        624,
+        421,
+        645,
+        973
+      ],
+      "mapping_column": null,
+      "manual_text": ""
+    },
+    {
+      "id": "field_21",
+      "label": "Fees Paid",
+      "type": "box",
+      "bbox": [
+        648,
+        421,
+        669,
+        973
+      ],
+      "mapping_column": null,
+      "manual_text": ""
+    },
+    {
+      "id": "field_22",
+      "label": "Progress",
+      "type": "box",
+      "bbox": [
+        675,
+        154,
+        696,
+        501
+      ],
+      "mapping_column": null,
+      "manual_text": ""
+    },
+    {
+      "id": "field_23",
+      "label": "Conduct",
+      "type": "box",
+      "bbox": [
+        675,
+        620,
+        695,
+        970
+      ],
+      "mapping_column": null,
+      "manual_text": ""
+    },
+    {
+      "id": "field_24",
+      "label": "Date of Leaving School",
+      "type": "box",
+      "bbox": [
+        700,
+        420,
+        721,
+        972
+      ],
+      "mapping_column": null,
+      "manual_text": ""
+    },
+    {
+      "id": "field_25",
+      "label": "Reason for Leaving School",
+      "type": "box",
+      "bbox": [
+        725,
+        420,
+        746,
+        972
+      ],
+      "mapping_column": null,
+      "manual_text": ""
+    },
+    {
+      "id": "field_26",
+      "label": "Remarks",
+      "type": "box",
+      "bbox": [
+        751,
+        420,
+        772,
+        972
+      ],
+      "mapping_column": null,
+      "manual_text": ""
+    },
+    {
+      "id": "field_27",
+      "label": "Ref No.",
+      "type": "line",
+      "bbox": [
+        794,
+        100,
+        813,
+        320
+      ],
+      "mapping_column": null,
+      "manual_text": ""
+    },
+    {
+      "id": "field_28",
+      "label": "Date",
+      "type": "line",
+      "bbox": [
+        816,
+        87,
+        835,
+        316
+      ],
+      "mapping_column": null,
+      "manual_text": ""
+    },
+    {
+      "id": "field_29",
+      "label": "Written by",
+      "type": "line",
+      "bbox": [
+        841,
+        130,
+        860,
+        314
+      ],
+      "mapping_column": null,
+      "manual_text": ""
+    }
+  ]
+}

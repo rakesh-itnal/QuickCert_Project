@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>QuickCert HITL Blueprint Studio</title>
+    <style>
+      :root {
+        --bg: #f4efe6;
+        --panel: rgba(255, 252, 247, 0.86);
+        --ink: #1f2a37;
+        --muted: #65707f;
+        --accent: #1144aa;
+        --accent-soft: #dbe7ff;
+        --line: #1f9d55;
+        --box: #d14343;
+        --border: rgba(31, 42, 55, 0.14);
+        --shadow: 0 18px 48px rgba(29, 38, 54, 0.12);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        font-family: Georgia, "Times New Roman", serif;
+        color: var(--ink);
+        background:
+          radial-gradient(circle at top left, rgba(17, 68, 170, 0.12), transparent 30%),
+          radial-gradient(circle at bottom right, rgba(209, 67, 67, 0.12), transparent 28%),
+          linear-gradient(180deg, #f8f3ea 0%, #efe8db 100%);
+      }
+
+      .app-shell {
+        display: grid;
+        grid-template-columns: 360px 1fr;
+        min-height: 100vh;
+      }
+
+      .sidebar,
+      .canvas-panel {
+        padding: 24px;
+      }
+
+      .sidebar {
+        background: rgba(255, 255, 255, 0.52);
+        border-right: 1px solid var(--border);
+        backdrop-filter: blur(18px);
+      }
+
+      .brand {
+        margin-bottom: 24px;
+      }
+
+      .brand h1 {
+        margin: 0;
+        font-size: 2rem;
+        line-height: 1;
+      }
+
+      .brand p {
+        margin: 10px 0 0;
+        color: var(--muted);
+        font-size: 0.96rem;
+      }
+
+      .card {
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-radius: 20px;
+        padding: 18px;
+        box-shadow: var(--shadow);
+        margin-bottom: 18px;
+      }
+
+      .card h2 {
+        margin: 0 0 10px;
+        font-size: 1.1rem;
+      }
+
+      .card p,
+      .meta,
+      .empty-state {
+        color: var(--muted);
+        line-height: 1.5;
+      }
+
+      .controls {
+        display: grid;
+        gap: 12px;
+        min-width: 0;
+      }
+
+      .controls input[type="file"] {
+        max-width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .button,
+      button,
+      select,
+      input[type="text"],
+      input[type="file"] {
+        font: inherit;
+      }
+
+      button {
+        border: 0;
+        border-radius: 999px;
+        padding: 12px 16px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: transform 160ms ease, box-shadow 160ms ease, opacity 160ms ease;
+      }
+
+      button:hover {
+        transform: translateY(-1px);
+      }
+
+      button:disabled {
+        opacity: 0.45;
+        cursor: not-allowed;
+      }
+
+      .primary {
+        color: white;
+        background: linear-gradient(135deg, #1144aa, #3568ce);
+        box-shadow: 0 10px 26px rgba(17, 68, 170, 0.24);
+      }
+
+      .secondary {
+        color: var(--ink);
+        background: #fff;
+        border: 1px solid var(--border);
+      }
+
+      .ghost {
+        color: var(--ink);
+        background: #ece4d3;
+      }
+
+      .field-list {
+        display: grid;
+        gap: 10px;
+        max-height: 260px;
+        overflow: auto;
+      }
+
+      .field-pill {
+        border: 1px solid var(--border);
+        border-left-width: 6px;
+        border-radius: 14px;
+        background: #fff;
+        padding: 10px 12px;
+      }
+
+      .field-pill.line {
+        border-left-color: var(--line);
+      }
+
+      .field-pill.box {
+        border-left-color: var(--box);
+      }
+
+      .canvas-panel {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+      }
+
+      .stage-toolbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+        flex-wrap: wrap;
+      }
+
+      .legend {
+        display: flex;
+        gap: 14px;
+        align-items: center;
+        color: var(--muted);
+        font-size: 0.92rem;
+      }
+
+      .legend span {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .legend i {
+        width: 20px;
+        height: 0;
+        border-bottom: 3px solid var(--line);
+      }
+
+      .legend b {
+        width: 18px;
+        height: 14px;
+        border: 2px solid var(--box);
+        display: inline-block;
+      }
+
+      .stage-frame {
+        position: relative;
+        min-height: 520px;
+        border-radius: 24px;
+        border: 1px solid var(--border);
+        background:
+          linear-gradient(135deg, rgba(255, 255, 255, 0.8), rgba(250, 245, 236, 0.96)),
+          repeating-linear-gradient(
+            45deg,
+            rgba(17, 68, 170, 0.03),
+            rgba(17, 68, 170, 0.03) 10px,
+            rgba(255, 255, 255, 0) 10px,
+            rgba(255, 255, 255, 0) 20px
+          );
+        box-shadow: var(--shadow);
+        overflow: auto;
+        padding: 20px;
+      }
+
+      .image-stage {
+        position: relative;
+        display: inline-block;
+        max-width: 100%;
+      }
+
+      .image-stage img {
+        display: block;
+        max-width: min(100%, 1080px);
+        height: auto;
+        border-radius: 14px;
+        box-shadow: 0 12px 36px rgba(29, 38, 54, 0.18);
+      }
+
+      .overlay {
+        position: absolute;
+        inset: 0;
+      }
+
+      .field-box {
+        position: absolute;
+        cursor: move;
+        border-radius: 6px;
+        background: rgba(255, 255, 255, 0.12);
+        backdrop-filter: blur(1px);
+        transition: box-shadow 120ms ease, transform 120ms ease;
+      }
+
+      .field-box.line {
+        border-bottom: 3px solid rgba(31, 157, 85, 0.95);
+      }
+
+      .field-box.box {
+        border: 2px solid rgba(209, 67, 67, 0.95);
+      }
+
+      .field-box.active {
+        box-shadow: 0 0 0 3px rgba(17, 68, 170, 0.28);
+      }
+
+      .field-label {
+        position: absolute;
+        top: -24px;
+        left: 0;
+        background: rgba(20, 27, 37, 0.92);
+        color: white;
+        font-size: 12px;
+        padding: 3px 8px;
+        border-radius: 999px;
+        white-space: nowrap;
+      }
+
+      .resize-handle {
+        position: absolute;
+        right: -6px;
+        bottom: -6px;
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: var(--accent);
+        border: 2px solid white;
+        cursor: nwse-resize;
+      }
+
+      .editor-popover {
+        position: absolute;
+        width: 280px;
+        z-index: 20;
+        background: rgba(255, 252, 247, 0.97);
+        border: 1px solid var(--border);
+        border-radius: 18px;
+        box-shadow: 0 20px 50px rgba(29, 38, 54, 0.22);
+        padding: 14px;
+      }
+
+      .editor-popover h3 {
+        margin: 0 0 8px;
+        font-size: 1rem;
+      }
+
+      .editor-popover label {
+        display: block;
+        margin-top: 10px;
+        margin-bottom: 4px;
+        font-size: 0.9rem;
+        color: var(--muted);
+      }
+
+      .editor-popover select,
+      .editor-popover input[type="text"] {
+        width: 100%;
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 10px 12px;
+        background: white;
+      }
+
+      .status {
+        min-height: 24px;
+        font-size: 0.94rem;
+        color: var(--muted);
+      }
+
+      .status.success {
+        color: #0b7d43;
+      }
+
+      .status.error {
+        color: #a53030;
+      }
+
+      .download-link {
+        color: var(--accent);
+        font-weight: 700;
+        text-decoration: none;
+      }
+
+      @media (max-width: 1080px) {
+        .app-shell {
+          grid-template-columns: 1fr;
+        }
+
+        .sidebar {
+          border-right: 0;
+          border-bottom: 1px solid var(--border);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar">
+        <div class="brand">
+          <h1>QuickCert Studio</h1>
+          <p>
+            Human-in-the-loop certificate templating with Gemini field recommendations and
+            ReportLab overlay export.
+          </p>
+        </div>
+
+        <section class="card">
+          <h2>1. Upload Blank Certificate</h2>
+          <div class="controls">
+            <input id="templateInput" type="file" accept="image/*" />
+            <button id="analyzeButton" class="primary">Recommend Fields</button>
+          </div>
+          <p class="meta">
+            Upload a blank certificate image. The backend sends it to Gemini and returns editable
+            fillable regions in normalized coordinates.
+          </p>
+        </section>
+
+        <section class="card">
+          <h2>2. Blueprint Actions</h2>
+          <div class="controls">
+            <button id="saveBlueprintButton" class="secondary" disabled>Save Blueprint</button>
+            <button id="generatePdfButton" class="ghost" disabled>Generate Transparent PDF</button>
+          </div>
+          <p class="meta">
+            Click a field on the canvas to map it to a database column or enter manual text.
+          </p>
+        </section>
+
+        <section class="card">
+          <h2>Detected Fields</h2>
+          <div id="fieldList" class="field-list">
+            <div class="empty-state">No fields yet. Upload a template to begin.</div>
+          </div>
+        </section>
+      </aside>
+
+      <main class="canvas-panel">
+        <div class="stage-toolbar">
+          <div class="legend">
+            <span><i></i> Line field</span>
+            <span><b></b> Box field</span>
+          </div>
+          <div id="status" class="status">Waiting for a blank certificate upload.</div>
+        </div>
+
+        <section class="stage-frame">
+          <div id="stage" class="image-stage">
+            <div class="empty-state">
+              The certificate canvas will appear here after Gemini returns recommendations.
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script src="/static/script.js"></script>
+  </body>
+</html>

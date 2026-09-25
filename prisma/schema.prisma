@@ -1,0 +1,309 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// =============================================================================
+// QUICKCERT V2 — MULTI-TENANT BUSINESS DOCUMENT PLATFORM
+// =============================================================================
+
+// -----------------------------------------------------------------------------
+// ORGANIZATION (formerly Institute)
+// -----------------------------------------------------------------------------
+
+model Organization {
+  id                  String   @id @default(cuid())
+  name                String
+  slug                String   @unique
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+
+  // Organization Details
+  logoUrl             String?
+  address             String?
+  country             String?  @default("India")
+  timezone            String?  @default("Asia/Kolkata")
+  contactEmail        String?
+  contactPhone        String?
+
+  // Classification
+  industry            String?  @default("General")    // HR, Manufacturing, Healthcare, Education, etc.
+  orgType             String?  @default("Company")    // Company, Hospital, Factory, School, etc.
+  registrationNumber  String?                         // Generic govt/tax/license registration
+
+  // Record ID Generation
+  idFormat            String   @default("REC-{AUTO}") // Pattern for unique record IDs
+
+  // Billing via Razorpay
+  razorpayCustomerId  String?
+  subscriptionStatus  String   @default("free")       // free | starter | business | enterprise
+  subscriptionEndsAt  DateTime?
+  razorpaySubId       String?
+
+  // Custom Columns (legacy support for dynamic fields)
+  customColumns       String?  @default("[]")
+
+  // Relationships
+  users               User[]
+  dataRecords         DataRecord[]
+  documents           Document[]
+  templates           DocumentTemplate[]
+  dataImports         DataImport[]
+  dataSchemas         DataSchema[]
+  definitions         DocumentDefinition[]
+  auditEvents         AuditEvent[]
+  apiKeys             ApiKey[]
+}
+
+// -----------------------------------------------------------------------------
+// USER
+// -----------------------------------------------------------------------------
+
+model User {
+  id              String   @id @default(cuid())
+  email           String   @unique
+  name            String?
+  passwordHash    String   @default("")
+  role            String   @default("OPERATOR") // OWNER, ADMIN, MANAGER, OPERATOR, APPROVER, AUDITOR, VIEWER
+  permissions     String?  @default("[]")       // JSON array of permission strings
+  authProvider    String   @default("email")    // email | google
+  avatarUrl       String?
+
+  organizationId  String
+  organization    Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+}
+
+// -----------------------------------------------------------------------------
+// DATA SCHEMA — Dynamic field definitions per organization
+// -----------------------------------------------------------------------------
+
+model DataSchema {
+  id              String   @id @default(cuid())
+  name            String                          // e.g. "Employee", "Inspection Record", "Student"
+  description     String?
+  fields          String   @default("[]")         // JSON array of field definitions [{name, type, required, validation, defaultValue, format}]
+  version         Int      @default(1)
+  isActive        Boolean  @default(true)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  organizationId  String
+  organization    Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  dataRecords     DataRecord[]
+  definitions     DocumentDefinition[]
+}
+
+// -----------------------------------------------------------------------------
+// DATA RECORD (formerly Student) — Generic business entity/record
+// -----------------------------------------------------------------------------
+
+model DataRecord {
+  id              String   @id @default(cuid())
+  uniqueId        String                          // Organization-scoped unique identifier (was satsNumber)
+  displayName     String?                         // Human-readable label for this record
+  data            String   @default("{}")         // JSON object of ALL dynamic fields
+  metadata        String?  @default("{}")         // JSON object of system metadata
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  editHistory     String?                         // JSON array of edit history
+
+  organizationId  String
+  organization    Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  schemaId        String?
+  schema          DataSchema? @relation(fields: [schemaId], references: [id], onDelete: SetNull)
+
+  importId        String?
+  import          DataImport? @relation(fields: [importId], references: [id], onDelete: SetNull)
+
+  documents       Document[]
+
+  @@unique([organizationId, uniqueId])
+}
+
+// -----------------------------------------------------------------------------
+// DATA IMPORT (formerly ImportBatch)
+// -----------------------------------------------------------------------------
+
+model DataImport {
+  id              String   @id @default(cuid())
+  fileName        String
+  fileSize        Int?
+  importedAt      DateTime @default(now())
+  recordCount     Int                             // How many records imported
+  schemaId        String?                         // Which schema these records belong to
+  metadata        String?  @default("{}")         // JSON: column mappings, source info, etc.
+
+  organizationId  String
+  organization    Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  records         DataRecord[]
+}
+
+// -----------------------------------------------------------------------------
+// DOCUMENT DEFINITION — Reusable document blueprints
+// -----------------------------------------------------------------------------
+
+model DocumentDefinition {
+  id              String   @id @default(cuid())
+  name            String                          // e.g. "Quality Inspection Certificate"
+  description     String?
+  category        String?                         // e.g. "Quality", "HR", "Compliance", "Education"
+  version         Int      @default(1)
+  status          String   @default("active")     // active | archived
+  fieldDefinitions String? @default("[]")         // JSON: which fields this document uses
+  validationRules  String? @default("[]")         // JSON: validation rules
+  workflowConfig   String? @default("{}")         // JSON: approval workflow config
+  signatureConfig  String? @default("{}")         // JSON: signing requirements
+  verificationConfig String? @default("{}")       // JSON: what to show on verification page
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  organizationId  String
+  organization    Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  schemaId        String?
+  schema          DataSchema? @relation(fields: [schemaId], references: [id], onDelete: SetNull)
+
+  templateId      String?
+
+  documents       Document[]
+}
+
+// -----------------------------------------------------------------------------
+// DOCUMENT TEMPLATE (formerly CertificateTemplate)
+// -----------------------------------------------------------------------------
+
+model DocumentTemplate {
+  id                  String   @id @default(cuid())
+  name                String
+  category            String   @default("General")   // Was `type` (STUDY, LEAVING, etc.)
+  version             Int      @default(1)
+  isActive            Boolean  @default(true)
+  backgroundImageUrl  String
+  fieldMappings       String                          // JSON: field coordinate mappings
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+
+  organizationId      String?                         // null = global default template
+  organization        Organization? @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  templateVersions    TemplateVersion[]
+  documents           Document[]
+}
+
+// -----------------------------------------------------------------------------
+// TEMPLATE VERSION — Immutable snapshots of templates
+// -----------------------------------------------------------------------------
+
+model TemplateVersion {
+  id              String   @id @default(cuid())
+  versionNumber   Int
+  fieldMappings   String                          // JSON snapshot of field mappings at this version
+  backgroundImageUrl String
+  createdAt       DateTime @default(now())
+  changelog       String?                         // What changed in this version
+
+  templateId      String
+  template        DocumentTemplate @relation(fields: [templateId], references: [id], onDelete: Cascade)
+}
+
+// -----------------------------------------------------------------------------
+// DOCUMENT (formerly Certificate) — Individual issued document instance
+// -----------------------------------------------------------------------------
+
+model Document {
+  id              String   @id @default(cuid())
+
+  // Document Identity
+  documentNumber  String   @unique               // e.g. DOC-2026-000001
+  documentHash    String?                         // SHA-256 hash for integrity verification
+
+  // Document Status / Lifecycle
+  status          String   @default("DRAFT")      // DRAFT, GENERATED, APPROVED, SIGNED, ISSUED, VALID, REVOKED, SUPERSEDED, EXPIRED
+  issueDate       DateTime @default(now())
+
+  // Versioning
+  version         Int      @default(1)
+  previousVersionId String?                       // Links to the document this superseded
+  supersededById  String?                         // Links to the document that superseded this
+
+  // Revocation
+  revokedAt       DateTime?
+  revokedReason   String?
+  revokedById     String?                         // User who revoked
+
+  // Expiry
+  expiresAt       DateTime?
+
+  // Data Snapshot — the business data used to generate this document
+  dataSnapshot    String?  @default("{}")         // JSON: complete data used for generation
+
+  // Dynamic fields (legacy support for certificate-specific fields)
+  dynamicFields   String?  @default("{}")         // JSON: any extra fields
+
+  // PDF Verification — QR code key (backward compatible)
+  qrValidationKey String   @unique @default(uuid())
+
+  // Signing metadata
+  signatureData   String?  @default("{}")         // JSON: signing info
+
+  // Relationships
+  recordId        String?
+  record          DataRecord? @relation(fields: [recordId], references: [id], onDelete: SetNull)
+
+  definitionId    String?
+  definition      DocumentDefinition? @relation(fields: [definitionId], references: [id], onDelete: SetNull)
+
+  templateId      String?
+  template        DocumentTemplate? @relation(fields: [templateId], references: [id], onDelete: SetNull)
+  templateVersionNumber Int?                      // Which template version was used
+
+  organizationId  String
+  organization    Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+}
+
+// -----------------------------------------------------------------------------
+// AUDIT EVENT — Immutable event log
+// -----------------------------------------------------------------------------
+
+model AuditEvent {
+  id              String   @id @default(cuid())
+  action          String                          // DOCUMENT_CREATED, DOCUMENT_ISSUED, DOCUMENT_REVOKED, etc.
+  timestamp       DateTime @default(now())
+  actorId         String?                         // User ID who performed the action
+  actorName       String?                         // Denormalized for historical accuracy
+  actorRole       String?
+  documentId      String?                         // Related document ID
+  documentNumber  String?                         // Denormalized document number
+  metadata        String?  @default("{}")         // JSON: additional event-specific data
+  ipAddress       String?
+  userAgent       String?
+
+  organizationId  String
+  organization    Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+}
+
+// -----------------------------------------------------------------------------
+// API KEY — Organization-level API authentication
+// -----------------------------------------------------------------------------
+
+model ApiKey {
+  id              String   @id @default(cuid())
+  name            String                          // Human-readable name for the key
+  keyHash         String                          // SHA-256 hash of the API key (never store plaintext)
+  keyPrefix       String                          // First 8 chars for identification (e.g. "qc_live_")
+  scopes          String   @default("[]")         // JSON array of permission scopes
+  isActive        Boolean  @default(true)
+  lastUsedAt      DateTime?
+  expiresAt       DateTime?
+  createdAt       DateTime @default(now())
+
+  organizationId  String
+  organization    Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+}
